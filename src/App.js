@@ -19,48 +19,56 @@ class App extends React.Component {
 			},
 			currentRate: "flat",
 			milesPerYear: 10000,
-			chargeTimeWindow: "",
+			chargeTimeWindow: "Between noon and 6pm",
 			bestPlan: "",
 		};
-		// this.setCurrentRate = this.setCurrentRate.bind(this);
-		// this.setMilesPerYear = this.setMilesPerYear.bind(this);
 		this.handleUserInput = this.handleUserInput.bind(this);
 	}
 	componentDidUpdate() {
 		console.log("state:", this.state);
 	}
-	// setCurrentRate(rate) {
-	// 	this.setState({
-	// 		currentRate: rate,
-	// 	});
-	// }
 
 	handleUserInput(event) {
 		this.setState({ [event.target.name]: event.target.value });
 	}
 
 	render() {
+		const timesOfDayOptions = Object.keys(this.state.timesOfDay);
 		return (
 			<div className="App">
 				<form>
 					form
-					<label htmlFor="currentRate">
-						What is your current electricity rate?
-					</label>
-					<select name="currentRate" onChange={this.handleUserInput}>
-						{this.state.rates.map((rate, idx) => (
-							<option key={idx}>{rate}</option>
+					<p>
+						<label htmlFor="currentRate">
+							What is your current electricity rate?
+						</label>
+						<select name="currentRate" onChange={this.handleUserInput}>
+							{this.state.rates.map((rate, idx) => (
+								<option key={idx}>{rate}</option>
+							))}
+						</select>
+					</p>
+					<p>
+						<label htmlFor="milesPerYear">
+							How many miles will you be driving per year?
+						</label>
+						<input
+							type="text"
+							name="milesPerYear"
+							onChange={this.handleUserInput}
+							value={this.state.milesPerYear}
+						/>
+					</p>
+					<p>
+						<label htmlFor="chargeTimeWindow">
+							What time of the day do you plan to charge the EV?
+						</label>
+					</p>
+					<select name="chargeTimeWindow" onChange={this.handleUserInput}>
+						{timesOfDayOptions.map((time, idx) => (
+							<option key={idx}>{time}</option>
 						))}
 					</select>
-					<label htmlFor="milesPerYear">
-						How many miles will you be driving per year?
-					</label>
-					<input
-						type="text"
-						name="milesPerYear"
-						onChange={this.handleUserInput}
-						value={this.state.milesPerYear}
-					/>
 				</form>
 				<div className="chart">chart</div>
 				<div className="suggestion">suggestion</div>
@@ -68,9 +76,5 @@ class App extends React.Component {
 		);
 	}
 }
-
-//which rate they are currently on - dropdown
-//how many miles the user will drive per year - slider
-//what hours of the day they plan to charge - dropdown
 
 export default App;
