@@ -1,9 +1,17 @@
 import "./App.css";
 import React from "react";
 import { flatRate, TOUrate } from "./rates";
+import Chart from "./chart";
+import {
+	VictoryBar,
+	VictoryChart,
+	VictoryAxis,
+	VictoryTheme,
+	VictoryStack,
+} from "victory";
 
-const loadProfile = {
-	flatRate: 9003.714027,
+const loadProfiles = {
+	flat: 9003.714027,
 	TOU: 10000,
 	//TOU number not calculated!
 };
@@ -12,6 +20,7 @@ class App extends React.Component {
 	constructor() {
 		super();
 		this.state = {
+			loaded: false,
 			rates: ["flat", "TOU"],
 			timesOfDay: {
 				"Between noon and 6pm": "high",
@@ -21,8 +30,14 @@ class App extends React.Component {
 			milesPerYear: 10000,
 			chargeTimeWindow: "Between noon and 6pm",
 			bestPlan: "",
+			LPData: [],
+			EVData: [],
 		};
 		this.handleUserInput = this.handleUserInput.bind(this);
+	}
+	componentDidMount() {
+		const LPData = this.createLPData(this.state.rates, loadProfiles);
+		this.setState({ LPData: LPData, loaded: true });
 	}
 	componentDidUpdate() {
 		console.log("state:", this.state);
@@ -30,6 +45,12 @@ class App extends React.Component {
 
 	handleUserInput(event) {
 		this.setState({ [event.target.name]: event.target.value });
+	}
+
+	createLPData(rates, LPs) {
+		const LPData = rates.map((rate) => ({ rate: rate, LP: LPs[rate] }));
+		console.log(LPData);
+		return LPData;
 	}
 
 	render() {
@@ -70,7 +91,17 @@ class App extends React.Component {
 						))}
 					</select>
 				</form>
-				<div className="chart">chart</div>
+				{this.state.loaded && (
+					<div className="chart">
+						<VictoryChart domainPadding={40} width={500} height={600}>
+							<VictoryAxis tickValues={this.state.rates} />
+							<VictoryAxis dependentAxis tickFormat={(x) => `$${x}/year`} />
+							<VictoryStack>
+								<VictoryBar data={this.state.LPData} x="rate" y="LP" />
+							</VictoryStack>
+						</VictoryChart>
+					</div>
+				)}
 				<div className="suggestion">suggestion</div>
 			</div>
 		);

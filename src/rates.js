@@ -9,3 +9,10 @@ export function TOUrate(loadProfile_kWh, demand) {
 		return loadProfile_kWh * 0.2;
 	}
 }
+
+const rateFunctions = {
+	flat: flatRate,
+	TOU: TOUrate,
+};
+
+export default rateFunctions;
