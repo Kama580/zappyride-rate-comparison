@@ -31,35 +31,24 @@ class App extends React.Component {
 		super();
 		this.state = {
 			loaded: false,
-			currentRate: "flat",
+			currentRate: "Flat $0.15/kWh",
 			milesPerYear: 10000,
 			chosenTimeWindow: "Between noon and 6pm",
 			bestPlan: "",
 			B2: [],
-			impact: 0,
 			B1: [],
 			billImpact: [],
+			currentAnnualCost: 0,
+			newAnnualCost: 0,
 		};
 		this.handleUserInput = this.handleUserInput.bind(this);
 	}
 	componentDidMount() {
 		const B1 = this.createB1();
 		const billImpact = this.createBillImpact();
-		// const B2 = B1.map((rate) => ({
-		// 	name: rate.name,
-		// 	cost:
-		// 		rate.cost +
-		// 		billImpact.filter((x) => {
-		// 			return x.name === rate.name;
-		// 		})[0].cost,
-		// }));
 		const B2 = this.createB2(B1, billImpact);
-		// 	for (let i = 0; i < B1; i++) {
-		// 		B2["name"] = billImpact[i].name;
-		// 		B2["cost"] = billImpact[i].cost + B1[i].cost;
-		// 	}
-		console.log("B2", B2);
-		this.setState({ B1, B2, billImpact, loaded: true });
+		this.setState({ B1, B2, billImpact });
+		console.log("this state after component did mount:", this.state);
 	}
 	componentDidUpdate(_, prevState) {
 		if (
@@ -69,19 +58,21 @@ class App extends React.Component {
 		) {
 			const newBillImpact = this.createBillImpact();
 			const newB2 = this.createB2(this.state.B1, newBillImpact);
-			// const newB2 = {};
-			const EVLP = [...this.state.billImpact, ...this.state.B1];
-			// const newB22 = EVLP.reduce(function(,b){
-			// })
-			//this has to be refactored to reduce method because I can't know it's adding the same things!!
-			// for (let i = 0; i < this.state.B1.length; i++) {
-			// 	newB2["name"] = this.state.billImpact[i].name;
-			// 	newB2["cost"] = this.state.billImpact[i].cost + this.state.B1[i].cost;
-			// }
-			// const newB2 = allRates.reduce((acc, curr) => {
-			// 	return acc + curr;
-			// });
-			this.setState({ billImpact: newBillImpact, B2: newB2 });
+			console.log("line 61", this.state.currentRate);
+			console.log("line 62", this.state.chosenTimeWindow);
+			const currentAnnualCost = this.state.B1.filter((x) => {
+				return x.name === this.state.currentRate;
+			})[0].cost;
+			const newAnnualCost = newB2.filter((x) => {
+				return x.name === this.state.currentRate;
+			})[0].cost;
+			this.setState({
+				currentAnnualCost,
+				newAnnualCost,
+				billImpact: newBillImpact,
+				B2: newB2,
+				loaded: true,
+			});
 		}
 	}
 
@@ -127,6 +118,7 @@ class App extends React.Component {
 			return rate.name;
 		});
 		const timesOfDayOptionsArray = Object.keys(timesOfDayOptions);
+
 		return (
 			<div className="App">
 				<form>
@@ -165,23 +157,29 @@ class App extends React.Component {
 					<button type="submit">Calculate</button>
 				</form>
 				{this.state.loaded && (
-					<div className="chart">
-						<VictoryChart
-							domainPadding={40}
-							width={500}
-							height={600}
-							theme={VictoryTheme.material}
-						>
-							<VictoryAxis tickValues={ratesArray} />
-							<VictoryAxis dependentAxis tickFormat={(x) => `$${x}/year`} />
-							<VictoryStack>
-								<VictoryBar data={this.state.B1} x="name" y="cost" />
-								<VictoryBar data={this.state.billImpact} x="name" y="cost" />
-							</VictoryStack>
-						</VictoryChart>
+					<div>
+						<div className="chart">
+							<VictoryChart
+								domainPadding={40}
+								width={500}
+								height={600}
+								theme={VictoryTheme.material}
+							>
+								<VictoryAxis tickValues={ratesArray} />
+								<VictoryAxis dependentAxis tickFormat={(x) => `$${x}/year`} />
+								<VictoryStack>
+									<VictoryBar data={this.state.B1} x="name" y="cost" />
+									<VictoryBar data={this.state.billImpact} x="name" y="cost" />
+								</VictoryStack>
+							</VictoryChart>
+						</div>
+						<div className="suggestion">
+							suggestion
+							<p>{`Current annual cost: ${this.state.currentAnnualCost}`}</p>
+							<p>{`Total annual cost: ${this.state.newAnnualCost}`}</p>
+						</div>
 					</div>
 				)}
-				<div className="suggestion">suggestion</div>
 			</div>
 		);
 	}
