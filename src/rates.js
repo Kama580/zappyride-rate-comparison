@@ -12,6 +12,7 @@ function TOUrate(loadProfile_kWh) {
 			totalBill += rate.kWh * 0.2;
 		}
 	}
+	console.log("total bill of TOU rate:", totalBill);
 	return totalBill;
 }
 

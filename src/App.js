@@ -103,6 +103,7 @@ class App extends React.Component {
 	}
 
 	createB1() {
+		console.log("creating b1");
 		const B1 = allRates.map((rate) => ({
 			name: rate.name,
 			cost: rate.calculation(rate.homeLoadProfile),
@@ -111,6 +112,7 @@ class App extends React.Component {
 	}
 
 	createBillImpact() {
+		console.log("creating billImpact");
 		const demand = timesOfDayOptions[this.state.chosenTimeWindow];
 		const loadProfile = this.state.milesPerYear * 0.3;
 		const billImpact = allRates.map((rate) => ({
@@ -187,10 +189,13 @@ class App extends React.Component {
 						<div className="right-section">
 							<div className="results">
 								<Suggestion
-									nonEVAnnualCost={this.state.nonEVAnnualCost}
-									includingEVAnnualCost={this.state.includingEVAnnualCost}
 									bestPlan={this.state.bestPlan}
-									currentRate={this.state.B2.find(
+									currentPlan={{
+										name: this.state.currentRate,
+										nonEVAnnualCost: this.state.nonEVAnnualCost,
+										includingEVAnnualCost: this.state.includingEVAnnualCost,
+									}}
+									billImpact={this.state.billImpact.find(
 										(rate) => rate.name === this.state.currentRate
 									)}
 								/>

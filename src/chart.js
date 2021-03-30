@@ -24,7 +24,7 @@ const Chart = (props) => {
 					/>
 					<VictoryAxis
 						dependentAxis
-						tickFormat={(x) => `$${x}/year`}
+						tickFormat={(x) => `$${x.toLocaleString()}/year`}
 						padding={{ left: 20, right: 60 }}
 						name="name"
 						style={{
