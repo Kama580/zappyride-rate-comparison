@@ -58,14 +58,18 @@ class App extends React.Component {
 		) {
 			const newBillImpact = this.createBillImpact();
 			const newB2 = this.createB2(this.state.B1, newBillImpact);
-			console.log("line 61", this.state.currentRate);
-			console.log("line 62", this.state.chosenTimeWindow);
 			const currentAnnualCost = this.state.B1.filter((x) => {
 				return x.name === this.state.currentRate;
 			})[0].cost;
 			const newAnnualCost = newB2.filter((x) => {
 				return x.name === this.state.currentRate;
 			})[0].cost;
+			const allB2Costs = newB2.map((rate) => {
+				return rate.cost;
+			});
+			console.log("allB2Costs", allB2Costs);
+			const bestPlanRate = Math.max(...allB2Costs);
+			const bestPlan = 1;
 			this.setState({
 				currentAnnualCost,
 				newAnnualCost,
