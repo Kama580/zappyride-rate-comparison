@@ -38,15 +38,7 @@ const Chart = (props) => {
 					/>
 					<VictoryStack>
 						<VictoryBar
-							data={[
-								...props.B1,
-								{
-									name: props.currentRate,
-									cost: props.B1.filter((rate) => {
-										return rate.name === props.currentRate;
-									})[0].cost,
-								},
-							]}
+							data={props.B1}
 							x="name"
 							y="cost"
 							left={50}

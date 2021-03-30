@@ -13,17 +13,11 @@ const allRates = [
 		name: "TOU noon to 6pm",
 		calculation: rateFunctions.TOU,
 		homeLoadProfile: [
-			{ demand: "low", kWh: 4000 },
-			{ demand: "high", kWh: 5000 },
+			{ demand: "low", kWh: 6937.45295489197 },
+			{ demand: "high", kWh: 2066.26107208001 },
 		],
 	},
 ];
-
-const nonEVloadProfiles = {
-	"Flat $0.15/kWh": 9003.714027,
-	"TOU noon to 6pm": 10000,
-	//TOU number not calculated!
-};
 
 const timesOfDayOptions = {
 	"Between noon and 6pm": "high",
@@ -34,7 +28,6 @@ class App extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			loaded: false,
 			currentRate: "Flat $0.15/kWh",
 			milesPerYear: 10000,
 			chosenTimeWindow: "Between noon and 6pm",
@@ -42,34 +35,33 @@ class App extends React.Component {
 			B2: [],
 			B1: [],
 			billImpact: [],
-			currentAnnualCost: 0,
-			newAnnualCost: 0,
+			nonEVAnnualCost: 0,
+			includingEVAnnualCost: 0,
 		};
 		this.handleUserInput = this.handleUserInput.bind(this);
+		this.createBillImpact = this.createBillImpact.bind(this);
 	}
 	componentDidMount() {
 		const B1 = this.createB1();
 		const billImpact = this.createBillImpact();
 		const B2 = this.createB2(B1, billImpact);
-		const currentAnnualCost = B1.filter((x) => {
-			return x.name === this.state.currentRate;
-		})[0].cost;
-		const newAnnualCost = B2.filter((x) => {
-			return x.name === this.state.currentRate;
-		})[0].cost;
+		const nonEVAnnualCost = B1.find(
+			(element) => element.name === this.state.currentRate
+		).cost;
+		const includingEVAnnualCost = B2.find(
+			(element) => element.name === this.state.currentRate
+		).cost;
 		const allB2Costs = B2.map((rate) => {
 			return rate.cost;
 		});
 		const bestPlanRate = Math.min(...allB2Costs);
-		const bestPlan = B2.filter((rate) => {
-			return rate.cost === bestPlanRate;
-		})[0];
+		const bestPlan = B2.find((rate) => rate.cost === bestPlanRate);
 		this.setState({
 			B1,
 			B2,
 			billImpact,
-			currentAnnualCost,
-			newAnnualCost,
+			nonEVAnnualCost,
+			includingEVAnnualCost,
 			bestPlan,
 		});
 	}
@@ -79,14 +71,14 @@ class App extends React.Component {
 			prevState.milesPerYear !== this.state.milesPerYear ||
 			prevState.chosenTimeWindow !== this.state.chosenTimeWindow
 		) {
-			const newBillImpact = this.createBillImpact();
-			const newB2 = this.createB2(this.state.B1, newBillImpact);
-			const currentAnnualCost = this.state.B1.filter((x) => {
-				return x.name === this.state.currentRate;
-			})[0].cost;
-			const newAnnualCost = newB2.filter((x) => {
-				return x.name === this.state.currentRate;
-			})[0].cost;
+			const billImpact = this.createBillImpact();
+			const newB2 = this.createB2(this.state.B1, billImpact);
+			const nonEVAnnualCost = this.state.B1.find(
+				(element) => element.name === this.state.currentRate
+			).cost;
+			const includingEVAnnualCost = newB2.find(
+				(element) => element.name === this.state.currentRate
+			).cost;
 			const allB2Costs = newB2.map((rate) => {
 				return rate.cost;
 			});
@@ -95,11 +87,10 @@ class App extends React.Component {
 				return rate.cost === bestPlanRate;
 			})[0];
 			this.setState({
-				currentAnnualCost,
-				newAnnualCost,
-				billImpact: newBillImpact,
+				nonEVAnnualCost,
+				includingEVAnnualCost,
+				billImpact,
 				B2: newB2,
-				loaded: true,
 				bestPlan,
 			});
 		}
@@ -134,9 +125,7 @@ class App extends React.Component {
 			name: rate.name,
 			cost:
 				rate.cost +
-				billImpact.filter((x) => {
-					return x.name === rate.name;
-				})[0].cost,
+				billImpact.find((element) => element.name === rate.name).cost,
 		}));
 		return B2;
 	}
@@ -150,7 +139,7 @@ class App extends React.Component {
 				<div className="main-content">
 					<div className="main-container">
 						<form className="left-section">
-							<p>
+							<div className="form-input">
 								<label htmlFor="currentRate">
 									Which rate are you currently on?
 								</label>
@@ -161,8 +150,8 @@ class App extends React.Component {
 										))}
 									</select>
 								</p>
-							</p>
-							<p>
+							</div>
+							<div className="form-input">
 								<label htmlFor="milesPerYear">
 									How many miles will you be driving per year?
 								</label>
@@ -178,8 +167,8 @@ class App extends React.Component {
 									/>
 								</p>
 								<p>{`${this.state.milesPerYear.toLocaleString()} Miles`}</p>
-							</p>
-							<p>
+							</div>
+							<div className="form-input">
 								<label htmlFor="chosenTimeWindow">
 									What hours of the day do you plan to charging your EV?
 								</label>
@@ -193,26 +182,22 @@ class App extends React.Component {
 										))}
 									</select>
 								</p>
-							</p>
+							</div>
 						</form>
 						<div className="right-section">
 							<div className="results">
 								<Suggestion
-									currentAnnualCost={this.state.currentAnnualCost}
-									newAnnualCost={this.state.newAnnualCost}
+									nonEVAnnualCost={this.state.nonEVAnnualCost}
+									includingEVAnnualCost={this.state.includingEVAnnualCost}
 									bestPlan={this.state.bestPlan}
-									currentPlan={
-										this.state.B2.filter((rate) => {
-											return rate.name === this.state.currentRate;
-										})[0]
-									}
+									currentRate={this.state.B2.find(
+										(rate) => rate.name === this.state.currentRate
+									)}
 								/>
 								<Chart
-									ratesArray={allRates
-										.map((rate) => {
-											return rate.name;
-										})
-										.concat([this.state.currentPlan])}
+									ratesArray={allRates.map((rate) => {
+										return rate.name;
+									})}
 									B1={this.state.B1}
 									currentRate={this.state.currentRate}
 									billImpact={this.state.billImpact}
