@@ -4,8 +4,19 @@ import Chart from "./chart";
 import Suggestion from "./suggestion";
 
 const allRates = [
-	{ name: "Flat $0.15/kWh", calculation: rateFunctions.flat },
-	{ name: "TOU noon to 6pm", calculation: rateFunctions.TOU },
+	{
+		name: "Flat $0.15/kWh",
+		calculation: rateFunctions.flat,
+		homeLoadProfile: [{ demand: null, kWh: 9003.714027 }],
+	},
+	{
+		name: "TOU noon to 6pm",
+		calculation: rateFunctions.TOU,
+		homeLoadProfile: [
+			{ demand: "low", kWh: 4000 },
+			{ demand: "high", kWh: 5000 },
+		],
+	},
 ];
 
 const nonEVloadProfiles = {
@@ -84,18 +95,18 @@ class App extends React.Component {
 	createB1() {
 		const B1 = allRates.map((rate) => ({
 			name: rate.name,
-			cost: nonEVloadProfiles[rate.name],
+			cost: rate.calculation(rate.homeLoadProfile),
 		}));
+		console.log("creates b1:", B1);
 		return B1;
 	}
 
 	createBillImpact() {
+		const demand = timesOfDayOptions[this.state.chosenTimeWindow];
+		const loadProfile = this.state.milesPerYear * 0.3;
 		const billImpact = allRates.map((rate) => ({
 			name: rate.name,
-			cost: rate.calculation(
-				this.state.milesPerYear * 0.3,
-				timesOfDayOptions[this.state.chosenTimeWindow]
-			),
+			cost: rate.calculation([{ demand, kWh: loadProfile }]),
 		}));
 		return billImpact;
 	}
