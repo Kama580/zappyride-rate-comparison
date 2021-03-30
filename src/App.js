@@ -35,16 +35,24 @@ class App extends React.Component {
 			milesPerYear: 10000,
 			chosenTimeWindow: "Between noon and 6pm",
 			bestPlan: "",
-			LPData: [],
-			EVData: [],
+			b1: {
+				"Flat $0.15/kWh": 9003.714027,
+				"TOU noon to 6pm": 10000,
+			},
+			b2: {
+				"Flat $0.15/kWh": 9003.714027,
+				"TOU noon to 6pm": 10000,
+			},
+			impact: 0,
+			B1: [],
+			billImpact: [],
 		};
 		this.handleUserInput = this.handleUserInput.bind(this);
 	}
 	componentDidMount() {
-		const LPData = this.createLPData();
-		console.log("LPData,", LPData);
-		const EVData = this.createEVData();
-		this.setState({ LPData: LPData, EVData: EVData, loaded: true });
+		const B1 = this.createB1();
+		const billImpact = this.createBillImpact();
+		this.setState({ B1: B1, billImpact: billImpact, loaded: true });
 	}
 	componentDidUpdate(_, prevState) {
 		if (
@@ -52,11 +60,20 @@ class App extends React.Component {
 			prevState.milesPerYear !== this.state.milesPerYear ||
 			prevState.chosenTimeWindow !== this.state.chosenTimeWindow
 		) {
-			const newEVData = this.createEVData();
-			this.setState({ EVData: newEVData });
+			const newBillImpact = this.createBillImpact();
+			const newB2 = {};
+			const EVLP = [...this.state.billImpact, ...this.state.B1];
+			// const newB22 = EVLP.reduce(function(,b){
+			// })
+			for (let i = 0; i < this.state.B1.length; i++) {
+				newB2["name"] = this.state.billImpact[i].name;
+				newB2["cost"] = this.state.billImpact[i].cost + this.state.B1[i].cost;
+			}
+			// const newB2 = allRates.reduce((acc, curr) => {
+			// 	return acc + curr;
+			// });
+			this.setState({ billImpact: newBillImpact });
 		}
-		console.log("prev_state:", prevState);
-		console.log("this state:", this.state);
 	}
 
 	handleUserInput(event) {
@@ -65,23 +82,23 @@ class App extends React.Component {
 		});
 	}
 
-	createLPData() {
-		const LPData = allRates.map((rate) => ({
-			rate: rate.name,
-			LP: nonEVloadProfiles[rate.name],
+	createB1() {
+		const B1 = allRates.map((rate) => ({
+			name: rate.name,
+			cost: nonEVloadProfiles[rate.name],
 		}));
-		return LPData;
+		return B1;
 	}
 
-	createEVData() {
-		const EVData = allRates.map((rate) => ({
-			rate: rate.name,
-			EV: rate.calculation(
+	createBillImpact() {
+		const billImpact = allRates.map((rate) => ({
+			name: rate.name,
+			cost: rate.calculation(
 				this.state.milesPerYear * 0.3,
 				timesOfDayOptions[this.state.chosenTimeWindow]
 			),
 		}));
-		return EVData;
+		return billImpact;
 	}
 
 	render() {
@@ -137,8 +154,8 @@ class App extends React.Component {
 							<VictoryAxis tickValues={ratesArray} />
 							<VictoryAxis dependentAxis tickFormat={(x) => `$${x}/year`} />
 							<VictoryStack>
-								<VictoryBar data={this.state.LPData} x="rate" y="LP" />
-								<VictoryBar data={this.state.EVData} x="rate" y="EV" />
+								<VictoryBar data={this.state.B1} x="name" y="cost" />
+								<VictoryBar data={this.state.billImpact} x="name" y="cost" />
 							</VictoryStack>
 						</VictoryChart>
 					</div>
