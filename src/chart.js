@@ -9,8 +9,9 @@ import {
 
 const Chart = (props) => {
 	return (
-		<div className="chart">
+		<div className="result">
 			<VictoryChart
+				className="chart"
 				height={400}
 				width={500}
 				domainPadding={{ x: 100, y: [0, 20] }}

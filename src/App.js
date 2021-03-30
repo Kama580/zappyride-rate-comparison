@@ -1,4 +1,3 @@
-import "./App.css";
 import React from "react";
 import rateFunctions from "./rates";
 import Chart from "./chart";
@@ -121,69 +120,73 @@ class App extends React.Component {
 
 		return (
 			<div className="App">
-				<div>
-					<form className="left-section">
-						<p>
-							<label htmlFor="currentRate">
-								Which rate are you currently on?
-							</label>
+				<div className="header"></div>
+				<div className="main-content">
+					<div className="main-container">
+						<form className="left-section">
 							<p>
-								<select name="currentRate" onChange={this.handleUserInput}>
-									{ratesArray.map((rate, idx) => (
-										<option key={idx}>{rate}</option>
-									))}
-								</select>
+								<label htmlFor="currentRate">
+									Which rate are you currently on?
+								</label>
+								<p>
+									<select name="currentRate" onChange={this.handleUserInput}>
+										{ratesArray.map((rate, idx) => (
+											<option key={idx}>{rate}</option>
+										))}
+									</select>
+								</p>
 							</p>
-						</p>
-						<p>
-							<label htmlFor="milesPerYear">
-								How many miles will you be driving per year?
-							</label>
 							<p>
-								<input
-									type="text"
-									name="milesPerYear"
-									onChange={this.handleUserInput}
-									value={this.state.milesPerYear}
-								/>
+								<label htmlFor="milesPerYear">
+									How many miles will you be driving per year?
+								</label>
+								<p>
+									<input
+										type="text"
+										name="milesPerYear"
+										onChange={this.handleUserInput}
+										value={this.state.milesPerYear}
+									/>
+								</p>
 							</p>
-						</p>
-						<p>
-							<label htmlFor="chosenTimeWindow">
-								What hours of the day do you plan to charging your EV?
-							</label>
-						</p>
-						<p>
-							<select name="chosenTimeWindow" onChange={this.handleUserInput}>
-								{timesOfDayOptionsArray.map((time, idx) => (
-									<option key={idx}>{time}</option>
-								))}
-							</select>
-						</p>
-					</form>
-				</div>
-				<div className="right-section">
-					{this.state.loaded && (
-						<div>
-							<Chart
-								ratesArray={ratesArray}
-								B1={this.state.B1}
-								billImpact={this.state.billImpact}
-							/>
-							<div className="suggestion">
-								<Suggestion
-									currentAnnualCost={this.state.currentAnnualCost}
-									newAnnualCost={this.state.newAnnualCost}
-									bestPlan={this.state.bestPlan}
-									currentPlan={
-										this.state.B2.filter((rate) => {
-											return rate.name === this.state.currentRate;
-										})[0]
-									}
-								/>
-							</div>
+							<p>
+								<label htmlFor="chosenTimeWindow">
+									What hours of the day do you plan to charging your EV?
+								</label>
+								<p>
+									<select
+										name="chosenTimeWindow"
+										onChange={this.handleUserInput}
+									>
+										{timesOfDayOptionsArray.map((time, idx) => (
+											<option key={idx}>{time}</option>
+										))}
+									</select>
+								</p>
+							</p>
+						</form>
+						<div className="right-section">
+							{this.state.loaded && (
+								<div className="results">
+									<Suggestion
+										currentAnnualCost={this.state.currentAnnualCost}
+										newAnnualCost={this.state.newAnnualCost}
+										bestPlan={this.state.bestPlan}
+										currentPlan={
+											this.state.B2.filter((rate) => {
+												return rate.name === this.state.currentRate;
+											})[0]
+										}
+									/>
+									<Chart
+										ratesArray={ratesArray}
+										B1={this.state.B1}
+										billImpact={this.state.billImpact}
+									/>
+								</div>
+							)}
 						</div>
-					)}
+					</div>
 				</div>
 			</div>
 		);
