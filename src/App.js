@@ -35,14 +35,7 @@ class App extends React.Component {
 			milesPerYear: 10000,
 			chosenTimeWindow: "Between noon and 6pm",
 			bestPlan: "",
-			b1: {
-				"Flat $0.15/kWh": 9003.714027,
-				"TOU noon to 6pm": 10000,
-			},
-			b2: {
-				"Flat $0.15/kWh": 9003.714027,
-				"TOU noon to 6pm": 10000,
-			},
+			B2: [],
 			impact: 0,
 			B1: [],
 			billImpact: [],
@@ -52,7 +45,21 @@ class App extends React.Component {
 	componentDidMount() {
 		const B1 = this.createB1();
 		const billImpact = this.createBillImpact();
-		this.setState({ B1: B1, billImpact: billImpact, loaded: true });
+		// const B2 = B1.map((rate) => ({
+		// 	name: rate.name,
+		// 	cost:
+		// 		rate.cost +
+		// 		billImpact.filter((x) => {
+		// 			return x.name === rate.name;
+		// 		})[0].cost,
+		// }));
+		const B2 = this.createB2(B1, billImpact);
+		// 	for (let i = 0; i < B1; i++) {
+		// 		B2["name"] = billImpact[i].name;
+		// 		B2["cost"] = billImpact[i].cost + B1[i].cost;
+		// 	}
+		console.log("B2", B2);
+		this.setState({ B1, B2, billImpact, loaded: true });
 	}
 	componentDidUpdate(_, prevState) {
 		if (
@@ -61,18 +68,20 @@ class App extends React.Component {
 			prevState.chosenTimeWindow !== this.state.chosenTimeWindow
 		) {
 			const newBillImpact = this.createBillImpact();
-			const newB2 = {};
+			const newB2 = this.createB2(this.state.B1, newBillImpact);
+			// const newB2 = {};
 			const EVLP = [...this.state.billImpact, ...this.state.B1];
 			// const newB22 = EVLP.reduce(function(,b){
 			// })
-			for (let i = 0; i < this.state.B1.length; i++) {
-				newB2["name"] = this.state.billImpact[i].name;
-				newB2["cost"] = this.state.billImpact[i].cost + this.state.B1[i].cost;
-			}
+			//this has to be refactored to reduce method because I can't know it's adding the same things!!
+			// for (let i = 0; i < this.state.B1.length; i++) {
+			// 	newB2["name"] = this.state.billImpact[i].name;
+			// 	newB2["cost"] = this.state.billImpact[i].cost + this.state.B1[i].cost;
+			// }
 			// const newB2 = allRates.reduce((acc, curr) => {
 			// 	return acc + curr;
 			// });
-			this.setState({ billImpact: newBillImpact });
+			this.setState({ billImpact: newBillImpact, B2: newB2 });
 		}
 	}
 
@@ -99,6 +108,18 @@ class App extends React.Component {
 			),
 		}));
 		return billImpact;
+	}
+
+	createB2(B1, billImpact) {
+		const B2 = B1.map((rate) => ({
+			name: rate.name,
+			cost:
+				rate.cost +
+				billImpact.filter((x) => {
+					return x.name === rate.name;
+				})[0].cost,
+		}));
+		return B2;
 	}
 
 	render() {
