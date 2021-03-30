@@ -109,13 +109,6 @@ class App extends React.Component {
 		this.setState({
 			[event.target.name]: event.target.value,
 		});
-		// if (event.target.name === "milesPerYear") {
-		// 	const milesInt = parseInt(event.target.value, 10);
-		// 	this.setState({ milesPerYear: milesInt });
-		// } else {
-
-		// }
-		console.log("the state:", this.state);
 	}
 
 	createB1() {
@@ -181,9 +174,10 @@ class App extends React.Component {
 										name="milesPerYear"
 										onChange={this.handleUserInput}
 										value={this.state.milesPerYear}
-										valueLabelDisplay="auto"
+										step={1000}
 									/>
 								</p>
+								<p>{`${this.state.milesPerYear.toLocaleString()} Miles`}</p>
 							</p>
 							<p>
 								<label htmlFor="chosenTimeWindow">
