@@ -57,6 +57,7 @@ class App extends React.Component {
 			const newAnnualCost = newB2.filter((x) => {
 				return x.name === this.state.currentRate;
 			})[0].cost;
+			console.log("line 60 annualcost", newAnnualCost);
 			const allB2Costs = newB2.map((rate) => {
 				return rate.cost;
 			});
@@ -164,7 +165,7 @@ class App extends React.Component {
 						/>
 						<div className="suggestion">
 							<Suggestion
-								currentAnnualCost={this.state.currentPlan}
+								currentAnnualCost={this.state.currentAnnualCost}
 								newAnnualCost={this.state.newAnnualCost}
 								bestPlan={this.state.bestPlan}
 								currentPlan={
