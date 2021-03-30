@@ -48,10 +48,34 @@ class App extends React.Component {
 		this.handleUserInput = this.handleUserInput.bind(this);
 	}
 	componentDidMount() {
+		console.log(
+			"the state at the beginning of component did mount:",
+			this.state
+		);
 		const B1 = this.createB1();
 		const billImpact = this.createBillImpact();
 		const B2 = this.createB2(B1, billImpact);
-		this.setState({ B1, B2, billImpact });
+		const currentAnnualCost = B1.filter((x) => {
+			return x.name === this.state.currentRate;
+		})[0].cost;
+		const newAnnualCost = B2.filter((x) => {
+			return x.name === this.state.currentRate;
+		})[0].cost;
+		const allB2Costs = B2.map((rate) => {
+			return rate.cost;
+		});
+		const bestPlanRate = Math.min(...allB2Costs);
+		const bestPlan = B2.filter((rate) => {
+			return rate.cost === bestPlanRate;
+		})[0];
+		this.setState({
+			B1,
+			B2,
+			billImpact,
+			currentAnnualCost,
+			newAnnualCost,
+			bestPlan,
+		});
 	}
 	componentDidUpdate(_, prevState) {
 		if (
@@ -67,7 +91,6 @@ class App extends React.Component {
 			const newAnnualCost = newB2.filter((x) => {
 				return x.name === this.state.currentRate;
 			})[0].cost;
-			console.log("line 60 annualcost", newAnnualCost);
 			const allB2Costs = newB2.map((rate) => {
 				return rate.cost;
 			});
@@ -177,25 +200,23 @@ class App extends React.Component {
 							</p>
 						</form>
 						<div className="right-section">
-							{this.state.loaded && (
-								<div className="results">
-									<Suggestion
-										currentAnnualCost={this.state.currentAnnualCost}
-										newAnnualCost={this.state.newAnnualCost}
-										bestPlan={this.state.bestPlan}
-										currentPlan={
-											this.state.B2.filter((rate) => {
-												return rate.name === this.state.currentRate;
-											})[0]
-										}
-									/>
-									<Chart
-										ratesArray={ratesArray}
-										B1={this.state.B1}
-										billImpact={this.state.billImpact}
-									/>
-								</div>
-							)}
+							<div className="results">
+								<Suggestion
+									currentAnnualCost={this.state.currentAnnualCost}
+									newAnnualCost={this.state.newAnnualCost}
+									bestPlan={this.state.bestPlan}
+									currentPlan={
+										this.state.B2.filter((rate) => {
+											return rate.name === this.state.currentRate;
+										})[0]
+									}
+								/>
+								<Chart
+									ratesArray={ratesArray}
+									B1={this.state.B1}
+									billImpact={this.state.billImpact}
+								/>
+							</div>
 						</div>
 					</div>
 				</div>
