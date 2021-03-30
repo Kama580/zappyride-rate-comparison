@@ -10,9 +10,14 @@ import {
 	VictoryStack,
 } from "victory";
 
+const allRates = [
+	{ name: "Flat $0.15/kWh", calculation: rateFunctions.flat },
+	{ name: "TOU noon to 6pm", calculation: rateFunctions.TOU },
+];
+
 const nonEVloadProfiles = {
-	flat: 9003.714027,
-	TOU: 10000,
+	"Flat $0.15/kWh": 9003.714027,
+	"TOU noon to 6pm": 10000,
 	//TOU number not calculated!
 };
 
@@ -26,7 +31,6 @@ class App extends React.Component {
 		super();
 		this.state = {
 			loaded: false,
-			rates: ["flat", "TOU"],
 			currentRate: "flat",
 			milesPerYear: 10000,
 			chosenTimeWindow: "Between noon and 6pm",
@@ -35,18 +39,14 @@ class App extends React.Component {
 			EVData: [],
 		};
 		this.handleUserInput = this.handleUserInput.bind(this);
-		this.handleSubmit = this.handleSubmit.bind(this);
 	}
 	componentDidMount() {
-		const LPData = this.createLPData(this.state.rates, nonEVloadProfiles);
+		const LPData = this.createLPData();
+		console.log("LPData,", LPData);
 		const EVData = this.createEVData();
-		// const EVData = this.createEVDate();
-		// console.log("ev data:", EVData);
 		this.setState({ LPData: LPData, EVData: EVData, loaded: true });
 	}
 	componentDidUpdate(_, prevState) {
-		// const newEVData = this.createEVData();
-		// this.setState({ EVData: newEVData });
 		if (
 			prevState.currentRate !== this.state.currentRate ||
 			prevState.milesPerYear !== this.state.milesPerYear ||
@@ -60,33 +60,23 @@ class App extends React.Component {
 	}
 
 	handleUserInput(event) {
-		// event.preventDefault();
 		this.setState({
 			[event.target.name]: event.target.value,
 		});
-		// console.log("this is the state after user input:", this.state);
 	}
 
-	handleSubmit(event) {
-		event.preventDefault();
-		try {
-			console.log("this:", this);
-			const newEVData = this.createEVData();
-			this.setState({ EVData: newEVData });
-		} catch (error) {
-			console.log(error);
-		}
-	}
-
-	createLPData(rates, LPs) {
-		const LPData = rates.map((rate) => ({ rate: rate, LP: LPs[rate] }));
+	createLPData() {
+		const LPData = allRates.map((rate) => ({
+			rate: rate.name,
+			LP: nonEVloadProfiles[rate.name],
+		}));
 		return LPData;
 	}
 
 	createEVData() {
-		const EVData = this.state.rates.map((rate) => ({
-			rate: rate,
-			EV: rateFunctions[rate](
+		const EVData = allRates.map((rate) => ({
+			rate: rate.name,
+			EV: rate.calculation(
 				this.state.milesPerYear * 0.3,
 				timesOfDayOptions[this.state.chosenTimeWindow]
 			),
@@ -95,6 +85,9 @@ class App extends React.Component {
 	}
 
 	render() {
+		const ratesArray = allRates.map((rate) => {
+			return rate.name;
+		});
 		const timesOfDayOptionsArray = Object.keys(timesOfDayOptions);
 		return (
 			<div className="App">
@@ -105,7 +98,7 @@ class App extends React.Component {
 							What is your current electricity rate?
 						</label>
 						<select name="currentRate" onChange={this.handleUserInput}>
-							{this.state.rates.map((rate, idx) => (
+							{ratesArray.map((rate, idx) => (
 								<option key={idx}>{rate}</option>
 							))}
 						</select>
@@ -141,7 +134,7 @@ class App extends React.Component {
 							height={600}
 							theme={VictoryTheme.material}
 						>
-							<VictoryAxis tickValues={this.state.rates} />
+							<VictoryAxis tickValues={ratesArray} />
 							<VictoryAxis dependentAxis tickFormat={(x) => `$${x}/year`} />
 							<VictoryStack>
 								<VictoryBar data={this.state.LPData} x="rate" y="LP" />
