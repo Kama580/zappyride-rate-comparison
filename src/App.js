@@ -2,6 +2,7 @@ import "./App.css";
 import React from "react";
 import rateFunctions from "./rates";
 import Chart from "./chart";
+import Suggestion from "./suggestion";
 import {
 	VictoryBar,
 	VictoryChart,
@@ -34,7 +35,7 @@ class App extends React.Component {
 			currentRate: "Flat $0.15/kWh",
 			milesPerYear: 10000,
 			chosenTimeWindow: "Between noon and 6pm",
-			bestPlan: "",
+			bestPlan: {},
 			B2: [],
 			B1: [],
 			billImpact: [],
@@ -67,15 +68,19 @@ class App extends React.Component {
 			const allB2Costs = newB2.map((rate) => {
 				return rate.cost;
 			});
-			console.log("allB2Costs", allB2Costs);
-			const bestPlanRate = Math.max(...allB2Costs);
-			const bestPlan = 1;
+			const bestPlanRate = Math.min(...allB2Costs);
+			console.log("best Rate:", bestPlanRate);
+			const bestPlan = newB2.filter((rate) => {
+				return rate.cost === bestPlanRate;
+			})[0];
+			console.log("bestplan:", bestPlan);
 			this.setState({
 				currentAnnualCost,
 				newAnnualCost,
 				billImpact: newBillImpact,
 				B2: newB2,
 				loaded: true,
+				bestPlan,
 			});
 		}
 	}
@@ -181,6 +186,14 @@ class App extends React.Component {
 							suggestion
 							<p>{`Current annual cost: ${this.state.currentAnnualCost}`}</p>
 							<p>{`Total annual cost: ${this.state.newAnnualCost}`}</p>
+							<Suggestion
+								bestPlan={this.state.bestPlan}
+								currentPlan={
+									this.state.B2.filter((rate) => {
+										return rate.name === this.state.currentRate;
+									})[0]
+								}
+							/>
 						</div>
 					</div>
 				)}
