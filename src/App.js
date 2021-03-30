@@ -48,10 +48,6 @@ class App extends React.Component {
 		this.handleUserInput = this.handleUserInput.bind(this);
 	}
 	componentDidMount() {
-		console.log(
-			"the state at the beginning of component did mount:",
-			this.state
-		);
 		const B1 = this.createB1();
 		const billImpact = this.createBillImpact();
 		const B2 = this.createB2(B1, billImpact);
@@ -113,6 +109,13 @@ class App extends React.Component {
 		this.setState({
 			[event.target.name]: event.target.value,
 		});
+		// if (event.target.name === "milesPerYear") {
+		// 	const milesInt = parseInt(event.target.value, 10);
+		// 	this.setState({ milesPerYear: milesInt });
+		// } else {
+
+		// }
+		console.log("the state:", this.state);
 	}
 
 	createB1() {
@@ -120,7 +123,6 @@ class App extends React.Component {
 			name: rate.name,
 			cost: rate.calculation(rate.homeLoadProfile),
 		}));
-		console.log("creates b1:", B1);
 		return B1;
 	}
 
@@ -147,9 +149,6 @@ class App extends React.Component {
 	}
 
 	render() {
-		const ratesArray = allRates.map((rate) => {
-			return rate.name;
-		});
 		const timesOfDayOptionsArray = Object.keys(timesOfDayOptions);
 
 		return (
@@ -164,8 +163,8 @@ class App extends React.Component {
 								</label>
 								<p>
 									<select name="currentRate" onChange={this.handleUserInput}>
-										{ratesArray.map((rate, idx) => (
-											<option key={idx}>{rate}</option>
+										{allRates.map((rate, idx) => (
+											<option key={idx}>{rate.name}</option>
 										))}
 									</select>
 								</p>
@@ -176,10 +175,13 @@ class App extends React.Component {
 								</label>
 								<p>
 									<input
-										type="text"
+										type="range"
+										min={1000}
+										max={100000}
 										name="milesPerYear"
 										onChange={this.handleUserInput}
 										value={this.state.milesPerYear}
+										valueLabelDisplay="auto"
 									/>
 								</p>
 							</p>
@@ -212,8 +214,13 @@ class App extends React.Component {
 									}
 								/>
 								<Chart
-									ratesArray={ratesArray}
+									ratesArray={allRates
+										.map((rate) => {
+											return rate.name;
+										})
+										.concat([this.state.currentPlan])}
 									B1={this.state.B1}
+									currentRate={this.state.currentRate}
 									billImpact={this.state.billImpact}
 								/>
 							</div>

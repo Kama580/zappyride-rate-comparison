@@ -1,8 +1,8 @@
-export function flatRate(loadProfile_kWh) {
+function flatRate(loadProfile_kWh) {
 	return loadProfile_kWh[0].kWh * 0.15;
 }
 
-export function TOUrate(loadProfile_kWh) {
+function TOUrate(loadProfile_kWh) {
 	let totalBill = 0;
 	for (let i = 0; i < loadProfile_kWh.length; i++) {
 		const rate = loadProfile_kWh[i];
@@ -19,5 +19,10 @@ const rateFunctions = {
 	flat: flatRate,
 	TOU: TOUrate,
 };
+
+export function getRoundedCost(floatCost) {
+	const rounded = Math.round(floatCost);
+	return rounded.toLocaleString();
+}
 
 export default rateFunctions;

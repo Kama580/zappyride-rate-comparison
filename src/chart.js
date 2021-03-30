@@ -10,8 +10,7 @@ import {
 const Chart = (props) => {
 	return (
 		<div className="result">
-			{console.log("props in chart", props)}
-			{props.billImpact && (
+			{props.billImpact[0] && (
 				<VictoryChart
 					className="chart"
 					height={400}
@@ -39,7 +38,15 @@ const Chart = (props) => {
 					/>
 					<VictoryStack>
 						<VictoryBar
-							data={props.B1}
+							data={[
+								...props.B1,
+								{
+									name: props.currentRate,
+									cost: props.B1.filter((rate) => {
+										return rate.name === props.currentRate;
+									})[0].cost,
+								},
+							]}
 							x="name"
 							y="cost"
 							left={50}
