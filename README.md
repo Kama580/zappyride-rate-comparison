@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# ZappyRide Rate Comparison
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This is an interactive data visualiziation app (deployed [here](link)), which allows users to compare electricity rate plans.
 
-## Available Scripts
+## Setup
 
-In the project directory, you can run:
+To run this project on your local machine, run the following commands:
 
-### `npm start`
+```
+git clone https://github.com/Kama580/zappyride-rate-comparison.git
+npm install
+npm start
+```
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Add a Rate
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+The structure of a new rate is an object with three keys:
 
-### `npm test`
+1. **Name** - a string
+2. **Calculation** - a function which takes a single parameter, a load profile array
+3. **Home load profile** - a non-EV load profile array which will be used for the B1 calculation.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+For example, for a rate called 'flat-17' which charges flat $17/kWh:
 
-### `npm run build`
+```
+function flat17Rate(loadProfile){
+    return loadProfile[0] * 0.17
+}
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+{
+    name: "flat17",
+	calculation: flat17Rate,
+	homeLoadProfile: [
+		{ demand: "null", kWh: 6937.45295489197 },
+	]
+}
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```
 
-### `npm run eject`
+To add a new rate, add the rate object to the allRates array in the main App.js file.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+You can place the rate function inside the rates.js file.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Tech Stack
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+This app uses React and Victory on the frontend.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+## Authors
 
-## Learn More
+- Kama Lee-Tal
+- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+```
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
