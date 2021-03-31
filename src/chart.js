@@ -33,10 +33,7 @@ const Chart = (props) => {
 					<VictoryAxis
 						dependentAxis
 						tickFormat={(x) => `$${x.toLocaleString()}/year`}
-						// padding={{ left: 20, right: 60 }}
-						// name="name"
 						label="Annual Cost"
-						// axisLabelComponent={<VictoryLabel dy={-80} fontSize={12} />}
 						style={{
 							axisLabel: { padding: 85 },
 							tickLabels: {
@@ -59,7 +56,6 @@ const Chart = (props) => {
 							}}
 							x="name"
 							y="cost"
-							// left={50}
 							animate={{
 								duration: 2000,
 								onLoad: { duration: 1000 },

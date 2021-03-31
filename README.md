@@ -39,7 +39,7 @@ function flat17Rate(loadProfile){
 
 To add a new rate, add the rate object to the allRates array in the main App.js file.
 
-You can place the rate function inside the rates.js file and export with the rateFunctions object.
+You can place the rate function inside the rates.js file and export it with the rateFunctions object.
 
 ## Tech Stack
 
