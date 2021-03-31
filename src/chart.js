@@ -1,4 +1,5 @@
 import React from "react";
+import { getRoundedCost } from "./rates";
 import {
 	VictoryBar,
 	VictoryChart,
@@ -32,11 +33,12 @@ const Chart = (props) => {
 					<VictoryAxis
 						dependentAxis
 						tickFormat={(x) => `$${x.toLocaleString()}/year`}
-						padding={{ left: 20, right: 60 }}
-						name="name"
+						// padding={{ left: 20, right: 60 }}
+						// name="name"
 						label="Annual Cost"
-						axisLabelComponent={<VictoryLabel dy={-80} fontSize={12} />}
+						// axisLabelComponent={<VictoryLabel dy={-80} fontSize={12} />}
 						style={{
+							axisLabel: { padding: 85 },
 							tickLabels: {
 								fontSize: 12,
 								align: "center",
@@ -48,24 +50,33 @@ const Chart = (props) => {
 					<VictoryStack>
 						<VictoryBar
 							data={props.B1}
-							style={{ data: { fill: "#0897FA" } }}
+							labels={props.B1.map((B1) => getRoundedCost(B1.cost))}
+							style={{
+								data: { fill: "#0897FA" },
+								labels: {
+									fill: "white",
+								},
+							}}
 							x="name"
 							y="cost"
-							left={50}
+							// left={50}
 							animate={{
 								duration: 2000,
 								onLoad: { duration: 1000 },
 							}}
+							labelComponent={<VictoryLabel dy={30} />}
 						/>
 						<VictoryBar
 							data={props.billImpact}
-							style={{ data: { fill: "#FACA08" } }}
+							labels={props.billImpact.map((bi) => getRoundedCost(bi.cost))}
+							style={{ data: { fill: "#FACA08" }, labels: { fill: "white" } }}
 							x="name"
 							y="cost"
 							animate={{
 								duration: 2000,
 								onLoad: { duration: 1000 },
 							}}
+							labelComponent={<VictoryLabel dy={30} />}
 						/>
 					</VictoryStack>
 					<VictoryLegend
