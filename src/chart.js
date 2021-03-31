@@ -69,8 +69,8 @@ const Chart = (props) => {
 						/>
 					</VictoryStack>
 					<VictoryLegend
-						x={180}
-						y={380}
+						x={170}
+						y={375}
 						orientation="horizontal"
 						data={[
 							{ name: "Electricity for home", symbol: { fill: "#0897FA" } },

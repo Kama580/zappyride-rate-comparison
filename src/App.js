@@ -143,7 +143,7 @@ class App extends React.Component {
 						<form className="left-section">
 							<div className="form-input">
 								<label htmlFor="currentRate">
-									Which rate are you currently on?
+									<p>Which rate are you currently on?</p>
 								</label>
 								<p>
 									<select name="currentRate" onChange={this.handleUserInput}>
@@ -155,7 +155,7 @@ class App extends React.Component {
 							</div>
 							<div className="form-input">
 								<label htmlFor="milesPerYear">
-									How many miles will you be driving per year?
+									<p>How many miles will you be driving per year?</p>
 								</label>
 								<p>
 									<input
@@ -168,11 +168,14 @@ class App extends React.Component {
 										step={1000}
 									/>
 								</p>
-								<p>{`${this.state.milesPerYear.toLocaleString()} Miles`}</p>
+								<p>{`${parseInt(
+									this.state.milesPerYear
+								).toLocaleString()} Miles`}</p>
+								{console.log("the state:", this.state)}
 							</div>
 							<div className="form-input">
 								<label htmlFor="chosenTimeWindow">
-									What hours of the day do you plan to charging your EV?
+									<p>What hours of the day do you plan to charging your EV?</p>
 								</label>
 								<p>
 									<select
