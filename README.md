@@ -18,7 +18,7 @@ The structure of a new rate is an object with three keys:
 
 1. **Name** - a string
 2. **Calculation** - a function which takes a single parameter, a load profile array
-3. **Home load profile** - a non-EV load profile array which will be used for the B1 calculation.
+3. **Home load profile** - a non-EV load profile array which will be used for the B1 calculation
 
 For example, for a rate called 'flat-17' which charges flat $17/kWh:
 
@@ -27,13 +27,12 @@ function flat17Rate(loadProfile){
     return loadProfile[0] * 0.17
 }
 
-
 {
-    name: "flat17",
-	calculation: flat17Rate,
-	homeLoadProfile: [
-		{ demand: "null", kWh: 6937.45295489197 },
-	]
+    name: 'flat17',
+    calculation: flat17Rate,
+    homeLoadProfile: [
+        {demand: 'null', kWh: 6937.45}
+    ]
 }
 
 ```
