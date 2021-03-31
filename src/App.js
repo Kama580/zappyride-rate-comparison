@@ -5,12 +5,12 @@ import Suggestion from "./suggestion";
 
 const allRates = [
 	{
-		name: "Flat $0.15/kWh",
+		name: "Flat",
 		calculation: rateFunctions.flat,
 		homeLoadProfile: [{ demand: null, kWh: 9003.714027 }],
 	},
 	{
-		name: "TOU noon to 6pm",
+		name: "TOU",
 		calculation: rateFunctions.TOU,
 		homeLoadProfile: [
 			{ demand: "low", kWh: 6937.45295489197 },
@@ -20,17 +20,17 @@ const allRates = [
 ];
 
 const timesOfDayOptions = {
-	"Between noon and 6pm": "high",
-	"After 6pm and before noon": "low",
+	"After noon; Before 6pm": "high",
+	"After 6pm; Before noon": "low",
 };
 
 class App extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			currentRate: "Flat $0.15/kWh",
+			currentRate: "Flat",
 			milesPerYear: 10000,
-			chosenTimeWindow: "Between noon and 6pm",
+			chosenTimeWindow: "After noon; Before 6pm",
 			bestPlan: {},
 			B2: [],
 			B1: [],
@@ -137,58 +137,71 @@ class App extends React.Component {
 
 		return (
 			<div className="App">
-				<div className="header"></div>
+				<div className="header">
+					<div id="main-title">
+						<h1>Identify the lowest cost electric rate for your EV.</h1>
+						<h3>
+							Adjust your information below to find the right electric rate for
+							you.
+						</h3>
+					</div>
+				</div>
 				<div className="main-content">
 					<div className="main-container">
-						<form className="left-section">
-							<div className="form-input">
-								<label htmlFor="currentRate">
-									<p>Which rate are you currently on?</p>
-								</label>
-								<p>
-									<select name="currentRate" onChange={this.handleUserInput}>
-										{allRates.map((rate, idx) => (
-											<option key={idx}>{rate.name}</option>
-										))}
-									</select>
-								</p>
+						<div className="left-section">
+							<div className="form-title">
+								<h2>Personalize Results</h2>
 							</div>
-							<div className="form-input">
-								<label htmlFor="milesPerYear">
-									<p>How many miles will you be driving per year?</p>
-								</label>
-								<p>
-									<input
-										type="range"
-										min={1000}
-										max={100000}
-										name="milesPerYear"
-										onChange={this.handleUserInput}
-										value={this.state.milesPerYear}
-										step={1000}
-									/>
-								</p>
-								<p>{`${parseInt(
-									this.state.milesPerYear
-								).toLocaleString()} Miles`}</p>
-								{console.log("the state:", this.state)}
-							</div>
-							<div className="form-input">
-								<label htmlFor="chosenTimeWindow">
-									<p>What hours of the day do you plan to charging your EV?</p>
-								</label>
-								<p>
-									<select
-										name="chosenTimeWindow"
-										onChange={this.handleUserInput}
-									>
-										{timesOfDayOptionsArray.map((time, idx) => (
-											<option key={idx}>{time}</option>
-										))}
-									</select>
-								</p>
-							</div>
-						</form>
+							<form>
+								<div className="form-input">
+									<label htmlFor="currentRate">
+										<p>Select your current rate</p>
+									</label>
+									<p>
+										<select name="currentRate" onChange={this.handleUserInput}>
+											{allRates.map((rate, idx) => (
+												<option key={idx}>{rate.name}</option>
+											))}
+										</select>
+									</p>
+								</div>
+								<div className="form-input">
+									<label htmlFor="milesPerYear">
+										<p>Miles driven per year</p>
+									</label>
+									<p>
+										<input
+											type="range"
+											min={1000}
+											max={100000}
+											name="milesPerYear"
+											onChange={this.handleUserInput}
+											value={this.state.milesPerYear}
+											step={1000}
+										/>
+									</p>
+									<p>{`${parseInt(
+										this.state.milesPerYear
+									).toLocaleString()} Miles`}</p>
+									{console.log("the state:", this.state)}
+								</div>
+								<div className="form-input">
+									<label htmlFor="chosenTimeWindow">
+										<p>Charging pattern</p>
+									</label>
+									<p>
+										<select
+											name="chosenTimeWindow"
+											onChange={this.handleUserInput}
+										>
+											{timesOfDayOptionsArray.map((time, idx) => (
+												<option key={idx}>{time}</option>
+											))}
+										</select>
+									</p>
+								</div>
+							</form>
+						</div>
 						<div className="right-section">
 							<div className="results">
 								<Suggestion
