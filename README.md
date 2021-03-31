@@ -44,8 +44,8 @@ You can place the rate function inside the rates.js file and export it with the 
 ## Tech Stack
 
 This app uses React and Victory on the frontend.
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Authors
 
 - Kama Lee-Tal
-- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
