@@ -5,6 +5,8 @@ import {
 	VictoryAxis,
 	VictoryTheme,
 	VictoryStack,
+	VictoryLegend,
+	VictoryLabel,
 } from "victory";
 
 const Chart = (props) => {
@@ -12,24 +14,31 @@ const Chart = (props) => {
 		<div className="result">
 			{props.billImpact[0] && (
 				<VictoryChart
+					label="title"
 					className="chart"
 					height={400}
-					width={500}
+					width={600}
 					domainPadding={{ x: 100, y: [0, 20] }}
 					theme={VictoryTheme.material}
 				>
-					<VictoryAxis
-						tickValues={props.ratesArray}
-						stile={{ stroke: "none" }}
+					<VictoryLabel
+						text="Rate Comparison"
+						x={10}
+						y={20}
+						fontSize={12}
+						style={[{ fontSize: 20 }]}
 					/>
+					<VictoryAxis tickValues={props.ratesArray} />
 					<VictoryAxis
 						dependentAxis
 						tickFormat={(x) => `$${x.toLocaleString()}/year`}
 						padding={{ left: 20, right: 60 }}
 						name="name"
+						label="Annual Cost"
+						axisLabelComponent={<VictoryLabel dy={-80} fontSize={12} />}
 						style={{
 							tickLabels: {
-								fontSize: 8,
+								fontSize: 12,
 								align: "center",
 								padding: 0,
 								stroke: "none",
@@ -39,6 +48,7 @@ const Chart = (props) => {
 					<VictoryStack>
 						<VictoryBar
 							data={props.B1}
+							style={{ data: { fill: "#0897FA" } }}
 							x="name"
 							y="cost"
 							left={50}
@@ -49,6 +59,7 @@ const Chart = (props) => {
 						/>
 						<VictoryBar
 							data={props.billImpact}
+							style={{ data: { fill: "#FACA08" } }}
 							x="name"
 							y="cost"
 							animate={{
@@ -57,6 +68,15 @@ const Chart = (props) => {
 							}}
 						/>
 					</VictoryStack>
+					<VictoryLegend
+						x={180}
+						y={380}
+						orientation="horizontal"
+						data={[
+							{ name: "Electricity for home", symbol: { fill: "#0897FA" } },
+							{ name: "Electric Vehicle", symbol: { fill: "#FACA08" } },
+						]}
+					/>
 				</VictoryChart>
 			)}
 		</div>

@@ -29,9 +29,9 @@ const Suggestion = (props) => {
 								props.bestPlan.name
 							} plan, you'll be paying $${getRoundedCost(
 								props.bestPlan.cost
-							)} per year, which means saving $${getRoundedCost(
+							)} per year, saving $${getRoundedCost(
 								props.currentPlan.includingEVAnnualCost - props.bestPlan.cost
-							)} per year`}</p>
+							)} per year!`}</p>
 						)}
 					</div>
 				</div>
