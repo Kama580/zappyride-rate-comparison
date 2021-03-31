@@ -24,8 +24,8 @@ const Chart = (props) => {
 				>
 					<VictoryLabel
 						text="Rate Comparison"
-						x={10}
-						y={20}
+						x={-25}
+						y={10}
 						fontSize={12}
 						style={[{ fontSize: 20 }]}
 					/>
@@ -47,9 +47,9 @@ const Chart = (props) => {
 					<VictoryStack>
 						<VictoryBar
 							data={props.B1}
-							labels={props.B1.map((B1) => getRoundedCost(B1.cost))}
+							labels={props.B1.map((B1) => `$${getRoundedCost(B1.cost)}`)}
 							style={{
-								data: { fill: "#0897FA" },
+								data: { fill: "#0D77B0" },
 								labels: {
 									fill: "white",
 								},
@@ -64,8 +64,10 @@ const Chart = (props) => {
 						/>
 						<VictoryBar
 							data={props.billImpact}
-							labels={props.billImpact.map((bi) => getRoundedCost(bi.cost))}
-							style={{ data: { fill: "#FACA08" }, labels: { fill: "white" } }}
+							labels={props.billImpact.map(
+								(bi) => `$${getRoundedCost(bi.cost)}`
+							)}
+							style={{ data: { fill: "#FABA45" }, labels: { fill: "white" } }}
 							x="name"
 							y="cost"
 							animate={{
@@ -80,8 +82,8 @@ const Chart = (props) => {
 						y={375}
 						orientation="horizontal"
 						data={[
-							{ name: "Electricity for home", symbol: { fill: "#0897FA" } },
-							{ name: "Electric Vehicle", symbol: { fill: "#FACA08" } },
+							{ name: "Electricity for home", symbol: { fill: "#0D77B0" } },
+							{ name: "Electric Vehicle", symbol: { fill: "#FABA45" } },
 						]}
 					/>
 				</VictoryChart>

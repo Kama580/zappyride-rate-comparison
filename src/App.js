@@ -136,18 +136,18 @@ class App extends React.Component {
 		return (
 			<div className="App">
 				<div className="header">
-					<div id="main-title">
-						<h1>Identify the lowest cost electric rate for your EV.</h1>
+					<div className="title" id="main-title">
+						<h1>Identify the lowest cost electric rate for your EV</h1>
 						<h3>
 							Adjust your information below to find the right electric rate for
-							you.
+							you!
 						</h3>
 					</div>
 				</div>
 				<div className="main-content">
 					<div className="main-container">
 						<div className="left-section">
-							<div className="form-title">
+							<div className="title" id="form-title">
 								<h2>Personalize Results</h2>
 							</div>
 							<form>

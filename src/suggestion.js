@@ -19,7 +19,9 @@ const Suggestion = (props) => {
 						{props.bestPlan.cost < props.currentPlan.includingEVAnnualCost && (
 							<p>{`You can save ~$${getRoundedCost(
 								props.currentPlan.includingEVAnnualCost - props.bestPlan.cost
-							)} per year by switching to the ${props.bestPlan.name} plan!`}</p>
+							)} per year by switching to the ${
+								props.bestPlan.name
+							} rate plan.`}</p>
 						)}
 					</div>
 				</div>
