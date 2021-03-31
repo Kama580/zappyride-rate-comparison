@@ -6,7 +6,6 @@ const Suggestion = (props) => {
 		<div className="result">
 			{props.bestPlan.cost && (
 				<div id="output-text">
-					{console.log("props:", props)}
 					<p>{`With an EV, You can expect an addition of $${getRoundedCost(
 						props.billImpact.cost
 					)} per year to your electricity bill if you stay on the same rate.`}</p>
@@ -19,7 +18,7 @@ const Suggestion = (props) => {
 						)}
 						{props.bestPlan.cost < props.currentPlan.includingEVAnnualCost && (
 							<p>{`You can save ~$${getRoundedCost(
-								props.bestPlan.cost
+								props.currentPlan.includingEVAnnualCost - props.bestPlan.cost
 							)} per year by switching to the ${props.bestPlan.name} plan!`}</p>
 						)}
 					</div>

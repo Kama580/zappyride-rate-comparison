@@ -103,7 +103,6 @@ class App extends React.Component {
 	}
 
 	createB1() {
-		console.log("creating b1");
 		const B1 = allRates.map((rate) => ({
 			name: rate.name,
 			cost: rate.calculation(rate.homeLoadProfile),
@@ -112,7 +111,6 @@ class App extends React.Component {
 	}
 
 	createBillImpact() {
-		console.log("creating billImpact");
 		const demand = timesOfDayOptions[this.state.chosenTimeWindow];
 		const loadProfile = this.state.milesPerYear * 0.3;
 		const billImpact = allRates.map((rate) => ({
@@ -183,7 +181,6 @@ class App extends React.Component {
 									<p>{`${parseInt(
 										this.state.milesPerYear
 									).toLocaleString()} Miles`}</p>
-									{console.log("the state:", this.state)}
 								</div>
 								<div className="form-input">
 									<label htmlFor="chosenTimeWindow">
@@ -208,7 +205,6 @@ class App extends React.Component {
 									bestPlan={this.state.bestPlan}
 									currentPlan={{
 										name: this.state.currentRate,
-										nonEVAnnualCost: this.state.nonEVAnnualCost,
 										includingEVAnnualCost: this.state.includingEVAnnualCost,
 									}}
 									billImpact={this.state.billImpact.find(
