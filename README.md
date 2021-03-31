@@ -1,6 +1,6 @@
 # ZappyRide Rate Comparison
 
-This is an interactive data visualiziation app (deployed [here](link)), which allows users to compare electricity rate plans.
+This is an interactive data visualiziation app (deployed [here](https://zappyride-rate-comparison.herokuapp.com/)), which allows users to compare electricity rate plans.
 
 ## Setup
 
